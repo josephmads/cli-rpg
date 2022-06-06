@@ -1,19 +1,8 @@
 # A simple, text-based game to demonstrate the use of for and while loops.
-# v.2: Adding on to demonstrate sets, lists, tuples, and dicts.
-
-# - Save the user input options you allow e.g. in a set that 
-# you can check against when your user makes a choice.
-# - Create an inventory for your player, where they can add and remove items.
-# - Players should be able to collect items they find in rooms and add them to their inventory.
-# - If they lose a fight against the dragon, then they should lose their inventory items.
-# - Add more rooms to your game and allow your player to explore.
-# - Some rooms can be empty, others can contain items, and yet others can contain an opponent.
-# - Implement some logic that decides whether or not your player can beat the opponent 
-# depending on what items they have in their inventory
-# - Use the random module to add a multiplier to your battles, similar to a dice roll in a real game. 
-# This pseudo-random element can have an effect on whether your player wins or loses when battling an opponent.
+# v.2: Adding on to demonstrate sets, lists, tuples, dicts, and functions.
 
 from random import randint as roll
+
 
 player_choices = {'f', 'b', 'l', 'r', 'a', 't', 's', 'i', 'h'}
 choice = ""
@@ -143,7 +132,6 @@ def combat(enemy, enemy_name):
 
     if enemy_hp <= 0:
         return True
-
         
 
 name = input("Greetings, Adventurer! What is your name?: ")
@@ -254,8 +242,70 @@ while game == True:
                     skel_rm = False
                     continue
 
+            if choice == "l":
+                pit_rm = True
+                while pit_rm == True:
+                    if "lichen" not in inventory:
+                        print("You enter a small room. In the center of the room taking up most of the space "
+                        "is a round pit. A faint glow coming from the pit iluminates the room.")
+                        choice = input(what_do).lower()
+                    
+                    if "lichen" in inventory:
+                        print("You enter a small room. In the center of the room taking up most of the space "
+                        "is a round pit. It is kind of dark in here.")
+                        choice = input(what_do).lower()
+
+                    if choice == "f":
+                        print(f"{name}, you step forward and fall into the pit. You fall for a long time. "
+                        "You have time to wonder why you did this. Eventually you hit the bottom...")
+                        game = False
+                        win = False
+                        break
+
+                    if choice == "s" and "lichen" not in inventory:
+                        print("You lay on the floor and crawl toward the edge of the pit. A foot below the edge "
+                        "you see a patch of glowing lichen on the wall of the pit.")
+                        pit = input(what_do).lower()
+
+                    if pit == "t":
+                        print("You scrape off as much of the glowing lichen as you can reach. It has a very pleasant smell.\n"
+                        "You put the lichen in your bag.")
+                        inventory.append("lichen")
+                        dungeon_inventory.remove("lichen")
+                        continue
+
+                    if choice == "s":
+                        print("You look around but don't see anything else of interest.")
+                        continue
+
+                    if choice == "b":
+                        print("")
+                        hallway = False
+                        continue
+
+                    if choice == "i":
+                        manage_inv()
+                        continue 
+
+                    if choice == "h":
+                        print(f"Health: {health}\n")
+                        continue
+                    
+                    elif choice in player_choices:
+                        print(choose_again)
+                        continue
+
+            else:
+                print(invalid_cmd)
+                continue
+
+            if choice == "b":
+                print("Too many choices! You go back...")
+                hallway = False
+                continue
+
             if choice == "i":
-                print(f"Inventory: {inventory}\n")
+                manage_inv()
                 continue 
 
             if choice == "h":
@@ -295,7 +345,24 @@ while game == True:
                     dragon_cave = False
                     continue
             
+            if choice == "a":
+                print("You charge dragon. You seem to take it by surprise!")
+                dragon_fight = combat(dragon, "dragon")
+                if dragon_fight == False:
+                    win = False
+                    game = False
+                    break
+                if dragon_fight == True:
+                    win = True
+                    game = False
+                    break
+                else:
+                    health = dragon_fight
+                    dragon_cave = False
+                    continue
+            
             if choice == "b":
+                print("You slowly back out of the room. The dragon lowers its head and closes its eyes.")
                 dragon_cave = False
                 continue
 
@@ -319,6 +386,7 @@ while game == True:
         print("You kick the dusty floor in the entrance area. Something small clatters across the floor. You pick it up. "
         "You have found a key.\n")
         inventory.append("key")
+        dungeon_inventory.remove("key")
         continue
 
     if choice == "s":
