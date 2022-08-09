@@ -3,7 +3,7 @@
 
 from random import randint as roll
 import rpg_functions as rf
-
+import requests
 
 player_choices = {'f', 'b', 'l', 'r', 'a', 't', 's', 'i', 'h'}
 choice = ""
@@ -14,10 +14,20 @@ health = 20
 equippable = ("rusty sword", "diamond sword", "shield")
 dungeon_inventory = ["key", "rusty sword", "lichen", "diamond sword", "shield"]
         
+old_name = input("Greetings, Adventurer! What is your name?: ")
 
-name = input("Greetings, Adventurer! What is your name?: ")
+min_name_len = 4
+max_name_len = len(old_name)
 
-print(f"Welcome, {name}! You have entered the dungeon of the dragon. " 
+base_url = f"https://uzby.com/api.php?min={min_name_len}&max={max_name_len}"
+
+response = requests.get(base_url)
+
+name = response.text
+
+print(f"Welcome, {old_name}! Your now have a new name. It is: {name}\n"
+    f"Do you like it? I don't care... {name}... weird...\n\n"
+    "You have entered the dungeon of the dragon. " 
     "The only ways to escape are defeating the dragon in combat or death.\n"
     "You can make the following choices in the game:\n"
     "[f]oward, [b]ack, [l]eft, [r]ight, [a]ttack, [t]ake, [s]earch, [i]nventory, [h]ealth,\n"
