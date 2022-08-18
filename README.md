@@ -2,3 +2,4 @@
 
 Using OOP in Python to create text-based, command-line interface role-playing game.
 
+This game is incomplete.
